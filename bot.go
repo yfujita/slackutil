@@ -25,18 +25,33 @@ func NewBot(url, channel, botName, faceIcon string) *Bot {
 	return bot
 }
 
-func (bot *Bot) Message(message, webMessage string) error {
-	textMap := make(map[string]string)
+func (bot *Bot) Message(title, text string) error {
+	return bot.MessageWithAttachments(title, text, nil)
+}
+
+func (bot *Bot) MessageWithAttachments(title, text string, attachments []map[string]string) error {
+	textMap := make(map[string]interface{})
 	textMap["channel"] = bot.channel
 	textMap["username"] = bot.botName
 	textMap["icon_emoji"] = bot.faceIcon
-	textMap["text"] = message + "\n" + webMessage
-	text, _ := json.Marshal(textMap)
+	if len(title) > 0 {
+		textMap["title"] = title
+	}
+	if len(text) > 0 {
+		textMap["text"] = text
+	}
+	textMap["link_names"] = 1
+
+	if attachments != nil {
+		textMap["attachments"] = attachments
+	}
+
+	message, _ := json.Marshal(textMap)
 
 	req, err := http.NewRequest(
 		"POST",
 		bot.url,
-		bytes.NewBuffer([]byte(text)),
+		bytes.NewBuffer([]byte(message)),
 	)
 	if err != nil {
 		return err
