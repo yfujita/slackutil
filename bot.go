@@ -26,17 +26,14 @@ func NewBot(url, channel, botName, faceIcon string) *Bot {
 }
 
 func (bot *Bot) Message(title, text string) error {
-	return bot.MessageWithAttachments("", title + "\n" + text, nil)
+	return bot.MessageWithAttachments(title + "\n" + text, nil)
 }
 
-func (bot *Bot) MessageWithAttachments(title, text string, attachments []map[string]string) error {
+func (bot *Bot) MessageWithAttachments(text string, attachments []map[string]string) error {
 	textMap := make(map[string]interface{})
 	textMap["channel"] = bot.channel
 	textMap["username"] = bot.botName
 	textMap["icon_emoji"] = bot.faceIcon
-	if len(title) > 0 {
-		textMap["title"] = title
-	}
 	if len(text) > 0 {
 		textMap["text"] = text
 	}
