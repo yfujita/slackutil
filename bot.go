@@ -26,7 +26,7 @@ func NewBot(url, channel, botName, faceIcon string) *Bot {
 }
 
 func (bot *Bot) Message(title, text string) error {
-	return bot.MessageWithAttachments(title, text, nil)
+	return bot.MessageWithAttachments("", title + "\n" + text, nil)
 }
 
 func (bot *Bot) MessageWithAttachments(title, text string, attachments []map[string]string) error {
